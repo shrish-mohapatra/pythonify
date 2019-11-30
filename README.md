@@ -1,6 +1,8 @@
 # pythonify
 > **Pythonify** is an practice problem tracker web application developed by **Shrish Mohapatra** using the **Django** framework. Key features include an authentication system with varying levels of access, ability to create/edit practice problems & sets, and various other features.
 
+![alt text](https://github.com/theRealShrishM/pythonify/blob/master/img/pythonify_problems.jpg "Practice Problems")
+
 ## Running Project
 You will first need to clone the repository to your local machine:
 ```
