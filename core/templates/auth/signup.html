@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+
+<form method="POST" class="needs-validation">
+    {% csrf_token %}
+
+    <div class="row justify-content-center">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <img class="mb-4" style="display: block; margin-left: auto; margin-right: auto;" width="72" height="72"
+                     src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/225/snake_1f40d.png">
+                <h5 class="card-title text-center"><a href="/signin" style="color: #6c757d;">Sign In</a> / Sign Up</h5>
+
+                {{ form.username|as_crispy_field }}
+                {{ form.usertag|as_crispy_field }}
+                {{ form.password1|as_crispy_field }}
+                {{ form.password2|as_crispy_field }}
+                {{ form.access_code|as_crispy_field }}
+
+                <button type="submit" class="btn btn-success" name="button">Sign Up</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<br>
+
+{% if msg|length != 0 %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{{ msg_type }}:</strong> {{ msg }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+{% endblock %}

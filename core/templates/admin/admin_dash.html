@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<! ADMIN DASHBOARD --->
+
+<! Welcome Card ->
+<div class="jumbotron rounded bg-dark shadow-sm text-white text-center">
+    <h1 class="display-4">Welcome <b>{{ user.get_username }}</b></h1>
+    <p class="lead" style="color: #f8f9fa;">You are currently viewing the Admin Dashboard.</p>
+</div>
+
+<! Leaderboard & User Count Cards ->
+{% if profile_count != 0 %}
+<div class="row mb-2">
+    <! Leaderboard ->
+    <div class="col-md-8 d-flex">
+        <div class="flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+                <font color="#343a40"><h3 class="mb-2">Leaderboard</h3></font>
+                <table class="table table-hover" style="margin-bottom: 0px;">
+                    <tbody>
+                        {% for profile in leaderboard %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{profile.usertag}}</td>
+                            <td>{{profile.get_complete_count}} / {{prompt_count}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <! User Count ->
+    <div class="col-md-4 d-flex">
+        <div class="bg-primary flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="text-white col p-4 d-flex flex-column position-static text-center my-auto">
+                <font size="6px" style="font-weight: 300;">
+                    There are <b>{{ profile_count }}</b> students in the system.
+                </font>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<! Manage & View Cards ->
+<div class="row mb-2">
+    <! Manage Class ->
+    <div class="col-md-6 d-flex">
+        <div class="bg-danger text-white flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static my-auto">
+                <a class="stretched-link" href="/manage"></a>
+                <h3 class="mb-2">Manage</h3>
+                <p class="lead">Manage student profiles and other course-related settings.</p>
+            </div>
+        </div>
+    </div>
+
+    <! View Challenges ->
+    <div class="col-md-6 d-flex">
+        <div class="bg-success text-white flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static my-auto">
+                <a class="stretched-link" href="/view_set"></a>
+                <h3 class="mb-2">Challenges</h3>
+                <p class="lead">View all {{prompt_count}} coding challenges for COMP 1405.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

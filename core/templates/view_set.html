@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<! Header Area ->
+<div class="container theme-showcase">
+    <div class="row d-flex justify-content-end">
+        <div class="mr-auto p-2">
+            {% if user.is_superuser %}
+                <h2><a href="/edit_set/{{set_select.pk}}" style="color: inherit;">
+                    {{ set_select.name }}</a></h2>
+            {% else %}
+                <h2>{{ set_select.name }}</h2>
+            {% endif %}
+        </div>
+
+        <! Challenge Set Dropdown ->
+        <div class="p-2">
+            <a class="btn btn-outline-dark" href="/index"><</a>
+
+            {% if user.is_superuser %}
+                <a class="btn btn-outline-dark" href="/create_set">+</a>
+            {% endif %}
+
+            <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownSetLink" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">Select Set</a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownSetLink">
+
+                {% for set in sets %}
+
+                    {% if set == set_select %}
+                        <a class="dropdown-item" href="#"><b>{{ set.name }}</b></a>
+                    {% else %}
+                        <a class="dropdown-item" href="/set_sets_ref/{{forloop.counter0}}">{{ set.name }}</a>
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<! Prompt Cards ->
+<div class="row mb-2">
+
+    {% for prompt in prompts %}
+    <div class="col-md-4 d-flex">
+        <div class="flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+
+            {% if forloop.counter0 in completed %}
+                <div class="col p-4 d-flex flex-column position-static bg-light">
+            {% else %}
+                <div class="col p-4 d-flex flex-column position-static">
+            {% endif %}
+
+                <a class="stretched-link" href="/view_prompt/{{prompt.pk}}"></a>
+                <b><a class="{{ prompt.get_difficulty_color}}">{{ prompt.difficulty }}</a></b>
+                <font color="#343a40"><h5 class="card-title">P{{ prompt.ref }}: {{ prompt.name }}</h5></font>
+                <p class="">{{ prompt.get_summary }}</p>
+
+                {% if forloop.counter0 in completed %}
+                    <p class="lead">(completed)</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <! Admin: Create new problem ->
+    {% if user.is_superuser %}
+        <div class="col-md-4 d-flex">
+            <div class="flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static bg-light">
+                    <a class="stretched-link" href="/create_prompt"></a>
+                    <p class="lead text-center my-auto">Create new practice problem</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

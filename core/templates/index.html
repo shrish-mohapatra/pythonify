@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<! DASHBOARD --->
+
+<! Welcome Card ->
+<div class="jumbotron rounded bg-success shadow-sm text-white text-center">
+    <h1 class="display-4">Welcome <b>{{ profile.usertag }}</b></h1>
+    <p class="lead" style="color: #f8f9fa;">You have completed <b>{{complete_count}}</b>/{{prompt_count}} challenges. Keep it up!</p>
+</div>
+
+<! Leaderboard & Percentile Cards ->
+<div class="row mb-2">
+    <! Leaderboard ->
+    <div class="col-md-8 d-flex">
+        <div class="flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+                <font color="#343a40"><h3 class="mb-2">Leaderboard</h3></font>
+                <table class="table table-hover" style="margin-bottom: 0px;">
+                    <tbody>
+                        {% for o_profile in leaderboard %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+
+                            {% if profile == o_profile %}
+                                <td><b>{{o_profile.usertag}} (me)</b></td>
+                            {% else %}
+                                <td>{{o_profile.usertag}}</td>
+                            {% endif %}
+
+                            <td>{{o_profile.get_complete_count}} / {{prompt_count}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <! Percentile Rank ->
+    <div class="col-md-4 d-flex">
+        <div class="bg-primary text-white flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static text-center my-auto">
+                <font size="6px" style="font-weight: 300;">
+                    You are in the <b>{{ profile.get_percentile }}</b> percentile.
+                </font>
+            </div>
+        </div>
+    </div>
+</div>
+
+<! View Prompt Cards ->
+<div class="row mb-2">
+    <! View Challenges ->
+    <div class="col-md-4 d-flex">
+        <div class="flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static my-auto">
+                <font color="#343a40"><h3 class="mb-2">Challenges</h3></font>
+                <p class="lead">View all {{prompt_count}} coding challenges for COMP 1405.</p>
+                <a href="/view_set" class="btn btn-danger">View</a>
+            </div>
+        </div>
+    </div>
+
+    <! Problem of the Week ->
+    <div class="col-md-8 d-flex">
+        <div class="flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static bg-dark text-white">
+                <h3 class="mb-2">{{ f_prompt.name }}</h3>
+                <p class="lead">{{f_prompt.get_summary}}</p>
+                <a href="/view_prompt/{{f_prompt.pk}}" style="color: #28a745;">Read More</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+
+<h2>{{ title }}</h2>
+
+<! Prompt form ->
+<form method="POST" class="needs-validation">
+    {% csrf_token %}
+
+    <div class="row">
+        <div class="col-4">
+            {{ form.ref|as_crispy_field }}
+        </div>
+        <div class="col-8">
+            {{ form.name|as_crispy_field }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            {{ form.difficulty|as_crispy_field }}
+        </div>
+        <div class="col-6">
+            {{ form.prompt_set|as_crispy_field }}
+        </div>
+    </div>
+
+    {{ form.description|as_crispy_field }}
+    {{ form.hint|as_crispy_field }}
+
+    <a class="btn btn-dark" href="/view_set" role="button"> < </a>
+    <button type="submit" class="btn btn-success" name="button">Submit</button>
+
+    {% if type == "edit" %}
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deletePopup">Delete</button>
+    {% endif %}
+</form>
+
+<! - Delete Popup --- >
+
+{% if type == "edit" %}
+<div class="modal fade" id="deletePopup" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <! Popup Header ->
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletePopupLabel">Delete Prompt</h5>
+
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <! Popup Content ->
+            <div class="modal-body">
+                <p>Are you sure you want to delete this prompt?</p>
+            </div>
+
+            <! Popop delete ->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a class="btn btn-danger" href="/delete_prompt/{{ prompt.pk }}">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

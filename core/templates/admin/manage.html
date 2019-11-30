@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<! TITLE --->
+<div class="px-3 py-3 pt -md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Manage</h1>
+    <p class="lead">Manage students, access codes, and more.</p>
+</div>
+
+<! TABS --->
+<ul class="nav nav-tabs justify-content-center" id="adminTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="admin-tab0" data-toggle="tab" href="#admin-students"
+           role="tab" aria-controls="adminTab" aria-selected="true">
+            <font size="4px" color="#343a40">Students</font></a></li>
+
+    <li class="nav-item">
+        <a class="nav-link" id="admin-tab1" data-toggle="tab" href="#admin-codes"
+           role="tab" aria-controls="adminTab" aria-selected="true">
+            <font size="4px" color="#343a40">Access Codes</font></a></li>
+
+    <li class="nav-item">
+        <a class="nav-link" id="admin-tab2" data-toggle="tab" href="#admin-misc"
+           role="tab" aria-controls="adminTab" aria-selected="true">
+            <font size="4px" color="#343a40">Misc.</font></a></li>
+</ul>
+
+<! CONTENT --->
+<div class="tab-content" id="adminContent">
+
+    <! STUDENTS TABLE --->
+    <div class="tab-pane fade show active" id="admin-students">
+        <br>
+
+        {% if students|length == 0 %}
+            <h4 class="text-center text-secondary">There are no students registered or pending.</h4>
+        {% else %}
+
+        <div class="row mb-2">
+            <div class="col-md-12 d-flex">
+                <div class="bg-light flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static my-auto">
+                        <div class="mb-3 d-flex justify-content-between">
+                            <h3>View Students</h3>
+                            <h4 class="text-secondary">Pending <span class="badge badge-pill badge-warning">{{std_pending}}</span>&nbsp Registered <span class="badge badge-pill badge-success">{{std_registered}}</span></h4>
+                        </div>
+
+                        <table class="table table-hover">
+            <thead>
+                <th scope="col">Username</th>
+                <th scope="col">Usertag</th>
+                <th scope="col">Completed</th>
+                <th scope="col">Status</th>
+                <th colspan="2" scope="col"></th>
+            </thead>
+
+            <tbody>
+                {% for item in students %}
+
+                    <tr>
+                        <td><a href="#" style="font-weight: 500; color: inherit;">{{ item.user.username }}</a></td>
+                        <td>{{ item.usertag }}</td>
+                        <td>{{ item.get_complete_count }} / {{ prompt_count }}</td>
+
+                        {% if item.status == "Pending" %}
+                            <td class="text-warning"><b>{{ item.status }}</b></td>
+                        {% else %}
+                            <td class="text-success"><b>{{ item.status }}</b></td>
+                        {% endif %}
+
+                        {% if item.status == "Pending" %}
+                            <td><a href="/approve_student/{{ item.pk }}" class="badge badge-pill badge-success" data-toggle="tooltip" data-placement="top" title="Approve">✓</a></td>
+                            <td><a href="/reject_student/{{ item.pk }}" class="badge badge-pill badge-danger" data-toggle="tooltip" data-placement="top" title="Reject">X</a></td>
+                        {% else %}
+                            <td><a class="badge badge-pill badge-secondary" data-toggle="tooltip" data-placement="top" title="Approve">✓</a></td>
+                            <td><a href="/reject_student/{{ item.pk }}" class="badge badge-pill badge-danger" data-toggle="tooltip" data-placement="top" title="Reject">X</a></td>
+                        {% endif %}
+
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <! ACCESS CODES --->
+    <div class="tab-pane fade" id="admin-codes">
+        <br>
+
+        <div class="row mb-2">
+
+            <! How To ->
+            <div class="col-md-8 d-flex">
+                <div class="bg-primary text-white flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static my-auto">
+                        <h3 class="mb-2">How it Works</h3>
+                        <p class="lead">
+                            Access codes are required for students to create accounts and use the site. Admins can view
+                            available access codes and create more.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <! Create Access Codes ->
+            <div class="col-md-4 d-flex">
+                <div class="bg-success text-white flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static my-auto">
+                        <a class="stretched-link" href="/create_codes"></a>
+                        <h3 class="mb-2">Create Codes</h3>
+                        <p class="lead">Complete the form to generate access codes for students.</p>
+                    </div>
+                </div>
+            </div>
+
+            <! View Access Codes ->
+            <div class="col-md-12 d-flex">
+                <div class="bg-light flex-fill row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static my-auto">
+                        <div class="mb-3 d-flex justify-content-between">
+                            <h3>View Codes</h3>
+                            <h4 class="text-secondary">Available <span class="badge badge-pill badge-success">{{codes_inactive}}</span>&nbsp Used <span class="badge badge-pill badge-secondary">{{codes_active}}</span></h4>
+                        </div>
+                        <div class="row">
+                            {% for item in a_codes %}
+                                <div class="col-3 text-center">
+                                    {% if item.status == 'Inactive' %}
+                                        <b><p class="text-success">{{ item.code }}</p></b>
+                                    {% else %}
+                                        <p class="text-dark">{{ item.code }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <a href="/delete_codes" class="btn btn-danger">Delete all Codes</a>
+    </div>
+
+    <! MISC --->
+    <div class="tab-pane fade" id="admin-misc">
+    </div>
+
+</div>
+
+{% endblock %}

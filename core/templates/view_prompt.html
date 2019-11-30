@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+
+<! Header Area ->
+<div class="theme-showcase">
+    <div class="row d-flex justify-content-end">
+        <div class="mr-auto p-2">
+            {% if user.is_superuser %}
+                <h2><a href="/edit_prompt/{{prompt.pk}}" style="color: inherit;">P{{ prompt.ref }}: {{ prompt.name }}</a></h2>
+            {% elif in_progress %}
+                <h2>P{{ prompt.ref }}: {{ prompt.name }}</h2>
+            {% else %}
+                <h2 class="text-secondary">P{{ prompt.ref }}: {{ prompt.name }}</h2>
+            {% endif %}
+        </div>
+
+        <! Challenge Set Dropdown ->
+        <div class="p-2">
+            <a class="btn btn-outline-dark" href="/view_set"><</a>
+            <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownSetLink" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">Select Challenge</a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownSetLink">
+
+                {% for o_prompt in other_prompts %}
+
+                    {% if o_prompt == prompt %}
+                        <a class="dropdown-item" href="#"><b>P{{ o_prompt.ref }}: {{ o_prompt.name }}</b></a>
+                    {% else %}
+                        <a class="dropdown-item" href="/view_prompt/{{o_prompt.pk}}">P{{ o_prompt.ref }}: {{ o_prompt.name }}</a>
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<p class="lead">Level: <b>{{ prompt.difficulty }}</b></p>
+
+<! Description ->
+<span class="lead">
+    <p>{{ prompt.get_description|linebreaks }}</p>
+</span>
+
+{% if form %}
+    <form method="POST" class="needs-validation">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-4">
+                {{ form.status|as_crispy_field }}
+            </div>
+            <div class="col-4">
+                {{ form.satisfaction|as_crispy_field }}
+            </div>
+            <div class="col-4">
+                <button type="submit" class="btn btn-success" name="button" style="margin-top: 38px; width: 100%">Submit</button>
+            </div>
+        </div>
+    </form>
+{% else %}
+    <p class="lead" style="margin-bottom: 0px;">
+        {% if complete_count == 0 %}
+            <b>No students have completed this challenge.</b>
+        {% elif complete_count == 1 %}
+            <b>{{complete_count}} student has completed this challenge.</b>
+        {% else %}
+            <b>{{complete_count}} students have completed this challenge.</b>
+        {% endif %}
+    </p>
+
+    <p class="lead"><b>Average Satisfaction ({{avg_satisfaction}})</b></p>
+    <div class="progress">
+        <div class="progress-bar {{bar_color}}" role="progressbar" style="width: {{avg_satisfaction}};" aria-valuenow="25"
+             aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+{% endif %}
+
+{% endblock %}
