@@ -32,4 +32,5 @@ Go to your browser and type the following: **127.0.0.1:8000**
 The document **Pythonify Project Report.pdf** explains the features of the application in exhaustive detail. Feel free to refer to this document as needed.
 
 You will however need to login as an admin to be able to fully use the application. A demo admin account has been made with the username **admin** and the password **pythonify**.
+
 Be sure to change the password before deploying the application!
